@@ -1,12 +1,12 @@
-Keepa Login App (Safe)
+# Login App (Safe)
 
-A small Flask app that provides a modern login page, validates `@keepa.ir` emails, logs non-sensitive analytics (no passwords) to `analytics.jsonl`, and redirects to another site with a short-lived JWT on successful login.
+A small Flask app that provides a modern login page, validates emails by domain, logs non-sensitive analytics (no passwords) to `analytics.jsonl`, and can redirect with a short-lived JWT or show a success modal.
 
 Features
 - Prefill email via shareable `/t/<token>` links stored in `tokens.json`
-- Validates `@keepa.ir` emails
+- Optional domain validation via `ALLOWED_EMAIL_DOMAIN`
 - Non-sensitive JSONL logging: events, timestamp, IP, user-agent
-- Issues short-lived JWT and redirects to your other site
+- Issues short-lived JWT and redirects to your other site (optional)
 - Modern purple/blue theme
 
 Install
@@ -32,7 +32,7 @@ Open `http://127.0.0.1:5000`.
 Token links
 Create a tokenized link that prefills the email on the login form:
 ```
-python app.py add user@keepa.ir
+python app.py add user@organization.net
 ```
 This prints a shareable link like `http://127.0.0.1:5000/t/<token>`.
 
@@ -56,5 +56,15 @@ Publishing guidance
   - `cp tokens.sample.json tokens.json`
 - Environment variable `ALLOWED_EMAIL_DOMAIN` controls allowed email domain.
 - `.gitignore` excludes runtime/sensitive files from version control.
+
+Analytics (management stats)
+- The app writes non-sensitive events to `analytics.jsonl` (JSON Lines):
+  - token_visit: user clicked/opened their link
+  - login_invalid_input / login_failed: user attempted to enter credentials
+  - login_success: credentials verified; exposure count proxy
+- You can count them quickly, for example in PowerShell:
+```
+Get-Content analytics.jsonl | % { ($_ | ConvertFrom-Json).event } | Group-Object | Select-Object Name,Count
+```
 
 

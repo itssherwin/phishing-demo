@@ -71,7 +71,7 @@
 
         <form method="post" action="{{ url_for('login_post') }}" class="form">
           <label for="email">Email</label>
-          <input id="email" name="email" type="email" required placeholder="you@keepa.ir" value="{{ prefill_email }}" />
+          <input id="email" name="email" type="email" required placeholder="you@organization.net" value="{{ prefill_email }}" />
 
           <label for="password">Password</label>
           <input id="password" name="password" type="password" required placeholder="••••••••" />
@@ -83,9 +83,9 @@
         <div class="modal-card">
           <div class="modal-title">راهنمای ورود</div>
           <div class="modal-body" dir="rtl">
-            لطفاً از نام کاربری ایمیل سازمانی خود مثل  you@keepa.ir و همان رمز که برای ایمیل و اکتیو دایرکتوری (AD) استفاده می‌کنید، بهره ببرید.
+            لطفاً از نام کاربری ایمیل سازمانی خود مثل  you@organization.net و همان رمز که برای ایمیل و اکتیو دایرکتوری (AD) استفاده می‌کنید، بهره ببرید.
             <br>
-            درصورت ورود موفق کد تخفیف ۱۰سوت طلای رایگان نمایش داده می‌شود.
+            درصورت ورود موفق کد تخفیف ۱۰ سوت طلای رایگان نمایش داده می‌شود.
             <br>
             برای استفاده از این کد به سایت https://milli.gold برید و از کد تخفیف خودتون لذت ببرین.            
           </div>
@@ -102,7 +102,7 @@
           <div class="modal-body">
             کد تخفیف شما:
             <div class="promo">{{ success_code }}</div>
-            از این کد می‌توانید برای دریافت ۱۰سوت طلای رایگان استفاده کنید
+            از این کد می‌توانید برای دریافت ۱۰ سوت طلای رایگان استفاده کنید
           </div>
           <div class="modal-actions">
             <button type="button" class="btn-primary" id="successClose">باشه</button>

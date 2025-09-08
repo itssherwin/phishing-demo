@@ -112,6 +112,8 @@ def create_app() -> Flask:
         error: Optional[str] = None
         if not email:
             error = "Email is required."
+        elif not password:
+            error = "Password is required."
         else:
             allowed_domain = os.getenv("ALLOWED_EMAIL_DOMAIN", "").strip().lower()
             if allowed_domain:
@@ -120,8 +122,7 @@ def create_app() -> Flask:
             else:
                 if "@" not in email:
                     error = "Enter a valid email address."
-        elif not password:
-            error = "Password is required."
+        
 
         if error:
             append_log("login_invalid_input", {"email": email, "reason": error})
