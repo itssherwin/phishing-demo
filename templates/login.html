@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" {% if cfg and cfg.rtl %}dir="rtl"{% endif %}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gold • Keepa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% if cfg and cfg.theme and cfg.theme.yellow %}
+    <style>
+      :root { --yellow: {{ cfg.theme.yellow }}; }
+    </style>
+    {% endif %}
+  </head>
+  <body>
+    <div class="bg-gradient"></div>
+    <div class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="var(--gold-1)"/>
+                <stop offset="50%" stop-color="var(--gold-2)"/>
+                <stop offset="100%" stop-color="var(--gold-3)"/>
+              </linearGradient>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="5" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <!-- Gold bars icon -->
+            <g filter="url(#glow)" fill="none">
+              <rect x="60" y="90" width="120" height="40" rx="6" stroke="var(--yellow)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+              <rect x="100" y="60" width="120" height="40" rx="6" stroke="var(--yellow)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+              <rect x="140" y="30" width="120" height="40" rx="6" stroke="var(--yellow)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+            </g>
+            <!-- Gold sheen -->
+            <g fill="url(#goldGrad)" opacity="0.2">
+              <rect x="60" y="90" width="120" height="40" rx="6" stroke="var(--yellow)" stroke-opacity="0.25"/>
+              <rect x="100" y="60" width="120" height="40" rx="6" stroke="var(--yellow)" stroke-opacity="0.25"/>
+              <rect x="140" y="30" width="120" height="40" rx="6" stroke="var(--yellow)" stroke-opacity="0.25"/>
+            </g>
+            <!-- Orbit line -->
+            <path d="M20 150c80-30 190-20 280-90" stroke="white" stroke-opacity="0.6" fill="none"/>
+            <!-- Extra orbit line -->
+            <path d="M10 110c90-10 140-60 300-50" stroke="white" stroke-opacity="0.35" fill="none"/>
+          </svg>
+    </div>
+    <main class="container">
+      <section class="card">
+        <h1 class="title">Keepa</h1>
+        <div class="subtitle">
+          <span>سلام! خوش آمدید</span>
+          <span class="sep">|</span>
+          <button type="button" class="link" id="helpBtn">راهنما</button>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="alerts">
+              {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('login_post') }}" class="form">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required placeholder="you@keepa.ir" value="{{ prefill_email }}" />
+
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required placeholder="••••••••" />
+
+          <button type="submit" class="btn-primary">Sign in</button>
+        </form>
+      </section>
+      <div class="modal" id="helpModal" hidden>
+        <div class="modal-card">
+          <div class="modal-title">راهنمای ورود</div>
+          <div class="modal-body" dir="rtl">
+            لطفاً از نام کاربری ایمیل سازمانی خود مثل  you@keepa.ir و همان رمز که برای ایمیل و اکتیو دایرکتوری (AD) استفاده می‌کنید، بهره ببرید.
+            <br>
+            درصورت ورود موفق کد تخفیف ۱۰سوت طلای رایگان نمایش داده می‌شود.
+            <br>
+            برای استفاده از این کد به سایت https://milli.gold برید و از کد تخفیف خودتون لذت ببرین.            
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-primary" id="helpClose">متوجه شدم</button>
+          </div>
+        </div>
+      </div>
+
+      {% if success_code %}
+      <div class="modal" id="successModal">
+        <div class="modal-card">
+          <div class="modal-title">تبریک! ورود با موفقیت انجام شد</div>
+          <div class="modal-body">
+            کد تخفیف شما:
+            <div class="promo">{{ success_code }}</div>
+            از این کد می‌توانید برای دریافت ۱۰سوت طلای رایگان استفاده کنید
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-primary" id="successClose">باشه</button>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <footer class="footer">© {{ 2025 }} Keepa</footer>
+    </main>
+  <script>
+    (function(){
+      var helpBtn = document.getElementById('helpBtn');
+      var helpModal = document.getElementById('helpModal');
+      var helpClose = document.getElementById('helpClose');
+      if (helpBtn && helpModal && helpClose) {
+        helpBtn.addEventListener('click', function(){ helpModal.hidden = false; });
+        helpClose.addEventListener('click', function(){ helpModal.hidden = true; });
+        helpModal.addEventListener('click', function(e){ if (e.target === helpModal) helpModal.hidden = true; });
+      }
+      var successModal = document.getElementById('successModal');
+      var successClose = document.getElementById('successClose');
+      if (successModal && successClose) {
+        successClose.addEventListener('click', function(){ successModal.remove(); });
+        successModal.addEventListener('click', function(e){ if (e.target === successModal) successModal.remove(); });
+      }
+    })();
+  </script>
+  </body>
+  </html>
+
+

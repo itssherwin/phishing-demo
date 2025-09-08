@@ -1,0 +1,7 @@
+{
+  "user@example.com": {
+    "password_hash": "$2b$12$ExampleHashReplaceMeWithRealBcryptHashxxxxxxxxxxxxxxx"
+  }
+}
+
+
